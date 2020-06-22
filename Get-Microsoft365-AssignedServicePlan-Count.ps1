@@ -1,22 +1,49 @@
 ﻿
 # Connect to Azure AD before running this scipt
-# Run with a read only account. Run at your own risk
+# Run with a read only account. Run at your own risk.
+# This will drop a CSV with details to the folder it runs in
 # Connect-AzureAD 
 
+# Possible Microsoft Teams Service Plans you may wish to count
+# Use ServicePlanID
 
-# Users with TeamspaceAPI Service Plan
-$UsersWithServicePlan = get-Azureaduser -all $true | Where-Object {$_.AssignedPlans.Service -contains "TeamspaceAPI"}
+# Teams Licence                                             57ff2da0-773e-42df-b2af-ffb7a2317929
+# MCOPSTNC (Old SfB Communications Credits)                 505e180f-f7e0-4b65-91d4-00d670bbd18c 
+# Microsoft 365 Phone System (MCOEV)                        4828c8ec-dc2e-4779-b502-87ac9ce28ab7
+# Microsoft 365 Audio Conferencing (MCOMEETADV)             3e26ee1f-8a5f-4d52-aee2-b81ce45c8f40
+# MCOPSTNPP
+
+
+# Put Service Plan ID to collect user count on in this variable
+$ServicePlanID = "57ff2da0-773e-42df-b2af-ffb7a2317929"
+
+
+############# You should not need to edit below this line ######################
+
+# Users with  Service Plan
+# Note filtering by AD memebers to reduce count of accounts (excludes all AD guest acconts, who won't have licences assigned).
+$UsersWithServicePlan = get-Azureaduser -filter "userType eq 'member'" -all $true | Where-Object {$_.AssignedPlans.ServicePlanId -contains "$($ServicePlanID)"}
+
+$UsersTotalCount = $($UsersWithServicePlan.count)
+
+Write-Host "Matching Users Found $UsersTotalCount"
 
 
 # Create an output file with details of the Assigned Service Plan and if it is enabled or disabled
 $OutputCollection=  @()
 
+$counter = 0
+
 Foreach ($user in $UsersWithServicePlan)
         {
+            
+            $counter++
 
-            $TeamsServicePlan = $null
+            Write-Host "Processing $counter of $UsersTotalCount"
 
-            $TeamsServicePlan = $User.AssignedPlans | Where-Object Service -EQ "TeamspaceAPI"
+            $ServicePlanDetail = $null
+
+            $ServicePlanDetail = $User.AssignedPlans | Where-Object ServicePlanId -EQ $($ServicePlanID)
 
             $output = New-Object -TypeName PSobject 
 
@@ -24,16 +51,20 @@ Foreach ($user in $UsersWithServicePlan)
             $output | add-member NoteProperty "DisplayName" -value $User.DisplayName
             $output | add-member NoteProperty "UserPrincipalName" -value $User.UserPrincipalName
             $output | add-member NoteProperty "UserType" -value $User.UserType
-            $output | add-member NoteProperty "ServicePlan" -value $($TeamsServicePlan.service)
-            $output | add-member NoteProperty "CapabilityStatus" -value $($TeamsServicePlan.CapabilityStatus)
-            $output | add-member NoteProperty "AssignedTimestamp" -value $($TeamsServicePlan.AssignedTimestamp)
-            $output | add-member NoteProperty "ServicePlanId" -value $($TeamsServicePlan.ServicePlanId)
+            $output | add-member NoteProperty "ServicePlan" -value $($ServicePlanDetail.service)
+            $output | add-member NoteProperty "CapabilityStatus" -value $($ServicePlanDetail.CapabilityStatus)
+            $output | add-member NoteProperty "AssignedTimestamp" -value $($ServicePlanDetail.AssignedTimestamp)
+            $output | add-member NoteProperty "ServicePlanId" -value $($ServicePlanDetail.ServicePlanId)
 
     $OutputCollection += $output
     }
 
     # Output collection
     # $OutputCollection
+
+#Write Output to Excel for Analysis
+
+$OutputCollection | Export-Csv "$((Get-Date).ToString("yyyyMMdd_HHmmss"))_ServicePlanList.csv" -NoTypeInformation
 
 $EnabledCount = $OutputCollection | Where-Object CapabilityStatus -eq Enabled | Measure-Object
 $DeletedCount = $OutputCollection | Where-Object CapabilityStatus -eq Deleted | Measure-Object
@@ -42,8 +73,10 @@ $date = Get-Date
 write-host ""
 Write-Host "Current date time is" $date
 write-host ""
-Write-Host "Number of users with TeamspaceAPI (Microsoft Teams) Service Plan is" $($OutputCollection.count)
+Write-host "Service Plan Scanned for is $ServicePlanID"
 write-host ""
-Write-Host "Number of users with TeamspaceAPI (Microsoft Teams) Service Plan Enabled is" $($EnabledCount.count)
+Write-Host "Number of users with Service Plan is" $($OutputCollection.count)
 write-host ""
-Write-Host "Number of users with TeamspaceAPI (Microsoft Teams) Service Plan Deleted is" $($DeletedCount.count)
+Write-Host "Number of users with Service Plan Enabled is" $($EnabledCount.count)
+write-host ""
+Write-Host "Number of users with Service Plan Deleted is" $($DeletedCount.count)
