@@ -14,6 +14,13 @@
 # MCOPSTNPP
 
 
+# Licence Level (won't work in this script)
+#Note MCOMEETADV is also at the licence level as 0c266dff-15dd-4b49-8397-2bb16070ed52
+# MCOPSTNC 47794cd0-f0e5-45c5-9033-2eb6b5fc84e0
+# MCOPSTN1 0dab259f-bf13-4952-b7f8-7db8f131b28d	
+
+
+
 # Put Service Plan ID to collect user count on in this variable
 $ServicePlanID = "57ff2da0-773e-42df-b2af-ffb7a2317929"
 
@@ -21,8 +28,8 @@ $ServicePlanID = "57ff2da0-773e-42df-b2af-ffb7a2317929"
 ############# You should not need to edit below this line ######################
 
 # Users with  Service Plan
-# Note filtering by AD memebers to reduce count of accounts (excludes all AD guest acconts, who won't have licences assigned).
-$UsersWithServicePlan = get-Azureaduser -filter "userType eq 'member'" -all $true | Where-Object {$_.AssignedPlans.ServicePlanId -contains "$($ServicePlanID)"}
+# Cant filter by just memebers because occassionaly AD members have UserType as blank
+$UsersWithServicePlan = get-Azureaduser -all $true | Where-Object {$_.AssignedPlans.ServicePlanId -contains "$($ServicePlanID)"}
 
 $UsersTotalCount = $($UsersWithServicePlan.count)
 
