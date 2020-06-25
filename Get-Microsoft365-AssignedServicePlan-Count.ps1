@@ -9,8 +9,8 @@
 # Possible Microsoft Teams Service Plans you may wish to count
 # Use ServicePlanID
 
-# Teams Licence                                             57ff2da0-773e-42df-b2af-ffb7a2317929
-# Comms Credits                                             505e180f-f7e0-4b65-91d4-00d670bbd18c
+# Teams Licence (TEAMS1)                                    57ff2da0-773e-42df-b2af-ffb7a2317929
+# Comms Credits (MCOPSTNC)                                  505e180f-f7e0-4b65-91d4-00d670bbd18c
 # Microsoft 365 Phone System (MCOEV)                        4828c8ec-dc2e-4779-b502-87ac9ce28ab7
 # Microsoft 365 Audio Conferencing (MCOMEETADV)             3e26ee1f-8a5f-4d52-aee2-b81ce45c8f40
 # Audio Conf PPM (MCOMEETACPEA)	                            bb038288-76ab-49d6-afc1-eaa6c222c65a
