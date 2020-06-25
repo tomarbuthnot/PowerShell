@@ -1,4 +1,6 @@
 ﻿
+# https://github.com/tomarbuthnot/PowerShell/blob/master/Get-Microsoft365-AssignedServicePlan-Count.ps1
+
 # Connect to Azure AD before running this scipt
 # Run with a read only account. Run at your own risk.
 # This will drop a CSV with details to the folder it runs in
@@ -8,21 +10,16 @@
 # Use ServicePlanID
 
 # Teams Licence                                             57ff2da0-773e-42df-b2af-ffb7a2317929
-# MCOPSTNC (Old SfB Communications Credits)                 505e180f-f7e0-4b65-91d4-00d670bbd18c 
+# Comms Credits                                             505e180f-f7e0-4b65-91d4-00d670bbd18c
 # Microsoft 365 Phone System (MCOEV)                        4828c8ec-dc2e-4779-b502-87ac9ce28ab7
 # Microsoft 365 Audio Conferencing (MCOMEETADV)             3e26ee1f-8a5f-4d52-aee2-b81ce45c8f40
-# MCOPSTNPP
+# Audio Conf PPM (MCOMEETACPEA)	                            bb038288-76ab-49d6-afc1-eaa6c222c65a
 
-
-# Licence Level (won't work in this script)
-#Note MCOMEETADV is also at the licence level as 0c266dff-15dd-4b49-8397-2bb16070ed52
-# MCOPSTNC 47794cd0-f0e5-45c5-9033-2eb6b5fc84e0
-# MCOPSTN1 0dab259f-bf13-4952-b7f8-7db8f131b28d	
 
 
 
 # Put Service Plan ID to collect user count on in this variable
-$ServicePlanID = "57ff2da0-773e-42df-b2af-ffb7a2317929"
+$ServicePlanID = "505e180f-f7e0-4b65-91d4-00d670bbd18c"
 
 
 ############# You should not need to edit below this line ######################
