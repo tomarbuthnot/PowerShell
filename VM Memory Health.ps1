@@ -1,5 +1,7 @@
 ﻿cls
 
+# Reporting script only. This script makes no changes. Please run at your own risk.
+
 #Report on Process Memory usage
 
 write-host ""
@@ -12,7 +14,15 @@ Select-Object -Property @{Name='Process';Expression={$_.Name}},
 
 $out2 = $AllProcesses | Sort-Object -Descending "Memory_Usage_(MB)"
 
+# Sum of process memory
+
 $out2 | Out-Host
+
+Write-Host "Sum of Process Memory"
+
+$out2 | Measure-Object -Sum "Memory_Usage_(MB)"
+
+write-host ""
 
 # Total And availble RAM
 
