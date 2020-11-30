@@ -17,7 +17,6 @@
 
 
 
-
 # Put Service Plan ID to collect user count on in this variable
 $ServicePlanID = "505e180f-f7e0-4b65-91d4-00d670bbd18c"
 
