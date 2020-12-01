@@ -18,9 +18,15 @@ $out2 = $AllProcesses | Sort-Object -Descending "Memory_Usage_(MB)"
 
 $out2 | Out-Host
 
-Write-Host "Sum of Process Memory"
+Write-Host ""
 
-$out2 | Measure-Object -Sum "Memory_Usage_(MB)"
+$sum = $out2 | Measure-Object -Sum "Memory_Usage_(MB)"
+
+Write-host "Current Process Memory Use in MB"
+
+# Take away the total line. very basic formula assume _total is top line
+($sum.Sum) - $($out2[0].'Memory_Usage_(MB)')
+
 
 write-host ""
 
@@ -61,7 +67,6 @@ foreach -begin {$sum=0} -process { $sum += $_ } -end {$sum/1024/1024/1024}
 
 Write-Host ""
 Write-Host "RAM Status"
-Write-Host ""
 
 $mem
 
